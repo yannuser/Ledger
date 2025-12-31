@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("models/User");
 const bcrypt = require('bcryptjs'); 
 const saltRounds = 10;
 
@@ -90,7 +90,7 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, lastname, email, password } = req.body;
     // Find the user by ID
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -98,6 +98,7 @@ const updateUser = async (req, res) => {
     }
     // Update the fields
     if (name) user.name = name;
+    if (lastname) user.lastname = lastname;
     if (email) user.email = email;
     if (password) user.password = await bcrypt.hash(password, saltRounds);
     const updatedUser = await user.save();
