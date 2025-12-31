@@ -107,6 +107,7 @@ const updateUser = async (req, res) => {
       user: {
         id: updatedUser._id,
         name: updatedUser.name,
+        lastname: updatedUser.lastname,
         email: updatedUser.email,
       },
     });
