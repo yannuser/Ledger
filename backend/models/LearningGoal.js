@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const learningGoalSchema = new mongoose.Schema({
-    name : {
+    title : {
         type: String,
         unique : true,
         required : [true, 'A name is required']
@@ -15,14 +15,6 @@ const learningGoalSchema = new mongoose.Schema({
         enum: ['ongoing', 'paused', 'finished'], // Allowed options
         default: 'ongoing',
         required : true,
-    },
-    startDate : {
-        type: Date,
-        required: true,
-    },
-    endDate : {
-        type: Date,
-        required: true,
     }
 }, {timestamps: true});
 

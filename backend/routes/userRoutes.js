@@ -1,9 +1,7 @@
 import express from 'express';
-import userControllers from "../controllers/userControllers.js"
+import userControllers from "../controllers/userControllers.js";
 
 const router = express.Router();
-
-// const userControllers = require("../controllers/userControllers");
 
 router.post("/register", userControllers.registerUser);
 router.get("/login/:emaili/:password", userControllers.loginUser);

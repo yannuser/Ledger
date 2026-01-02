@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import userRoutes from './routes/userRoutes.js';
+import learningGoalRoutes from "./routes/learningGoalRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -11,6 +14,10 @@ const PORT = process.env.PORT;
 // Middleware
 app.use(cors());
 app.use(express.json()); // Allows the server to accept JSON data
+
+app.use('/User', userRoutes);
+app.use('/LearningGoal', learningGoalRoutes);
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
