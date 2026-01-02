@@ -1,21 +1,28 @@
-const User = require("../models/User");
-const bcrypt = require('bcryptjs'); 
+import User from "../models/User.js";
+import bcrypt from "bcrypt";
+
+// const User = require("../models/User");
+
+
+// const bcrypt = require('bcryptjs'); 
 const saltRounds = 10;
 
 const registerUser = async (req, res) => {
   try {
-    const { name, lastname, dateOfBirth, email, password } = req.body;//destructured based on schema refernce
-    console.log(req.body);
+const { firstname, lastname, dateOfBirth, email, password } = req.body;    console.log(req.body);
     // Check if the user exists
-    const existingUser = User.findOne({email})
+    const existingUser = await  User.findOne({email : email});
+    console.log(existingUser);
+
     if (existingUser) {
         return res.status(400).json({ message: 'Email already registered.' });
     }
     // encrypt password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    console.log(hashedPassword);
     // create new user in the database
     const user = await User.create({
-      name, 
+      firstname, 
       lastname, 
       dateOfBirth,
       email,
@@ -24,13 +31,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      user: {
-        name : user.name, 
-        lastname : user.lastname, 
-        dateOfBirth : user.dateOfBirth,
-        email : user.email,
-        password: hashedPassword,
-      },
+      user
     });
 
   } catch (err) {
@@ -90,14 +91,14 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { name, lastname, email, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
     // Find the user by ID
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     // Update the fields
-    if (name) user.name = name;
+    if (firstname) user.firstname = firstname;
     if (lastname) user.lastname = lastname;
     if (email) user.email = email;
     if (password) user.password = await bcrypt.hash(password, saltRounds);
@@ -129,4 +130,14 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = {registerUser, loginUser, getLoggedInUser, getUserById, updateUser,deleteUser}; //which is fetched by routes as we imported there
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Exclude passwords
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const userControllers = {registerUser, loginUser, getLoggedInUser, getUserById, updateUser,deleteUser, getUsers}; //which is fetched by routes as we imported there
+export default userControllers;
