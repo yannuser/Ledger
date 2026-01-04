@@ -3,10 +3,10 @@ import learningGoalControllers from "../controllers/learningGoalControllers.js";
 
 const router = express.Router();
 
-router.post("/createLearningGoal",learningGoalControllers.createLearningGoal);
-router.update("/updateLearningGoal/:id",learningGoalControllers.updateLearningGoal);
-router.delete("/deleteLearningGoal/:id", learningGoalControllers.deleteLearningGoal);
-router.get("/getAllLearningGoal", learningGoalControllers.getAllLearningGoal);
+router.post("/create",learningGoalControllers.createLearningGoal);
+router.update("/update/:id",learningGoalControllers.updateLearningGoal);
+router.delete("/delete/:id", learningGoalControllers.deleteLearningGoal);
+router.get("/getByUser", learningGoalControllers.getLearningGoalsByUser);
 
 
 export default router;

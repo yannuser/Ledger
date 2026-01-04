@@ -57,5 +57,18 @@ const userSchema = new mongoose.Schema({
     }
 );
 
+userSchema.pre('findOneAndDelete', async function(next) {
+    // This catches the ID regardless of which delete method was called
+    const userId = this.getQuery()._id; 
+    
+    try {
+        // We use the LearningGoal model to wipe out all goals with this author ID
+        await mongoose.model('LearningGoal').deleteMany({ author: userId });
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 const User = mongoose.model('User', userSchema);
 export default User;
