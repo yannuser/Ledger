@@ -5,6 +5,7 @@ import cors from "cors";
 
 import userRoutes from './routes/userRoutes.js';
 import learningGoalRoutes from "./routes/learningGoalRoutes.js";
+import effortRecordRoutes from "./routes/effortRecordRoutes.js"
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json()); // Allows the server to accept JSON data
 
 app.use('/User', userRoutes);
 app.use('/LearningGoal', learningGoalRoutes);
+app.use('/EffortRecord', effortRecordRoutes);
 
 
 // MongoDB Connection
