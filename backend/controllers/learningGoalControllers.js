@@ -11,7 +11,7 @@ const createLearningGoal = async (req,res) => {
         
             const learningGoal = await LearningGoal.create({
                 title, 
-                description, 
+                description : description || null, 
                 status,
                 author
             })
@@ -73,8 +73,7 @@ const getLearningGoalsByUser =  async (req, res) => {
             const { authorId } = req.params;
             
             // Use .populate('author') to get user details instead of just the ID
-            const goals = await LearningGoal.find({ author: authorId })
-                                            .populate('author', 'firstName lastName email');
+            const goals = await LearningGoal.find({ author: authorId }).populate('author', 'firstName lastName email');
             
             res.status(200).json(goals);
         } catch (error) {

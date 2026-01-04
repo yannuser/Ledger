@@ -20,7 +20,11 @@ const learningGoalSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Must match the name used in mongoose.model('User', ...)
         required: true
-    }
+    },
+    efforts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LearningEffort'
+    }]
 }, {timestamps: true});
 
 const LearningGoal = mongoose.model('LearningGoal', learningGoalSchema);

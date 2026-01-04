@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       firstname, 
       lastname, 
-      dateOfBirth,
+      dateOfBirth : dateOfBirth || null,
       email,
       password: hashedPassword,
     });
