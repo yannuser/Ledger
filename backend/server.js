@@ -16,6 +16,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json()); // Allows the server to accept JSON data
 
+// routes
 app.use('/User', userRoutes);
 app.use('/LearningGoal', learningGoalRoutes);
 app.use('/EffortRecord', effortRecordRoutes);
