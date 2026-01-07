@@ -1,4 +1,6 @@
 import LearningGoal from "../models/LearningGoal.js";
+import User from "../models/User.js"
+
 
 const createLearningGoal = async (req,res) => {
     try {
@@ -8,7 +10,7 @@ const createLearningGoal = async (req,res) => {
             if (!userExists) {
                 return res.status(404).json({ message: "Author not found" });
             }
-        
+            
             const learningGoal = await LearningGoal.create({
                 title, 
                 description : description || null, 
