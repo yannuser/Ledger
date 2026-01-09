@@ -1,25 +1,32 @@
 import EffortRecord from "../models/EffortRecord.js";
 import LearningGoal from "../models/LearningGoal.js";
+import User from "../models/User.js"
+
 
 const createEffort = async (req, res) => {
     try {
-        const { title, description, goalId, authorId } = req.body;
+        const { title, description, goal, author } = req.body;
+        console.log(req.body);
+        
+        const userExists = User.findById(author);
+        if(!userExists){
+            return res.status(404).json({ message: "Author not found" });
+        }
 
         const effort = await EffortRecord.create({
             title,
             description,
-            goal: goalId || null,
-            author: authorId
+            goal: goal || null,
+            author
         });
-
-        if (goalId) {
-            await LearningGoal.findByIdAndUpdate(goalId, {
-                $push: { efforts: effort._id }
-            });
-        }
+       
+        await LearningGoal.findByIdAndUpdate(goal, {
+            $push: { efforts: effort._id }
+        });
+        
 
         res.status(201).json(effort);
-    } catch (error) {
+    } catch (error) {        
         res.status(400).json({ error: error.message });
     }
 };
@@ -37,25 +44,27 @@ const getEffortsByUser = async (req, res) => {
 const updateEffort = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, goalId } = req.body;
+        const { title, description, goal } = req.body;
 
         const oldEffort = await EffortRecord.findById(id);
         
+        console.log(oldEffort);
+        
         // If the goal link is changing, we need to clean up the LearningGoal arrays
-        if (goalId !== undefined && oldEffort.goal?.toString() !== goalId) {
+        if ( oldEffort.goal?.toString() !== goal) {
             // Remove from old goal array
             if (oldEffort.goal) {
-                await LearningGoal.findByIdAndUpdate(oldEffort.goal, { $pull: { efforts: id } });
+                await LearningGoal.findByIdAndUpdate(oldEffort.goal, { $pull: { efforts: id } }, { new: true });
             }
             // Add to new goal array
-            if (goalId) {
-                await LearningGoal.findByIdAndUpdate(goalId, { $push: { efforts: id } });
+            if (goal) {
+                await LearningGoal.findByIdAndUpdate(goal, { $push: { efforts: id } });
             }
         }
 
         const updatedEffort = await EffortRecord.findByIdAndUpdate(
             id, 
-            { title, description, goal: goalId || null },
+            { title, description, goal: goal || null },
             { new: true }
         );
 
