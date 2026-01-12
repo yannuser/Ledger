@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Home({ authorId }) {
   const [learningData, setLearningData] = useState([]);
@@ -46,7 +46,7 @@ export default function Home({ authorId }) {
     };
 
     fetchData();
-  }, [authorId]);
+  }, [authorId, navigate]);
 
   return (
     <>
@@ -57,6 +57,7 @@ export default function Home({ authorId }) {
             <h2>Learning goals</h2>
             {learningData.map((item) => (
               <p>
+                <Link to={"/home/" + item._id}>Click me</Link>
                 {item.title} : <span>{item.description}</span>
               </p>
             ))}

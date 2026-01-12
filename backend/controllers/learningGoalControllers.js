@@ -80,7 +80,18 @@ const getLearningGoalsByUser =  async (req, res) => {
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
-    }
+};
 
-const learningGoalControllers = {createLearningGoal, updateLearningGoal, deleteLearningGoal, getLearningGoalsByUser}
+const getLearningGoal = async (req, res) => {
+    try {
+        const {id} = req.query ;
+        const goal = await LearningGoal.findById(id);
+
+        res.status(200).json(goal)
+    } catch (error) {
+            res.status(500).json({ error: error.message });
+    }
+}
+
+const learningGoalControllers = {createLearningGoal, updateLearningGoal, deleteLearningGoal, getLearningGoalsByUser, getLearningGoal}
 export default learningGoalControllers;

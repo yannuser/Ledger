@@ -5,6 +5,7 @@ import SignUp from "./components/SignUp";
 import Home from "./components/Home";
 
 import { useState, useCallback } from "react";
+import GoalDetails from "./components/GoalDetails";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<Login handleUser={handleUser} />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/home" element={<Home authorId={user} />} />
+        <Route path="/home/:goalId" element={<GoalDetails />}/>
       </Routes>
     </>
   );
