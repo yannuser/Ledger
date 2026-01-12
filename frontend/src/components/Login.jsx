@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-export default function Login() {
+export default function Login({handleUser}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -20,8 +20,9 @@ export default function Login() {
             }
         })
         .then(result => {
-            navigate('/')
+            navigate('/home')
             console.log(result);
+            handleUser(result.data.user._id)
         })
         .catch(err => {
             console.log(err)

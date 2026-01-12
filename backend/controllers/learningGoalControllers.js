@@ -72,10 +72,9 @@ const deleteLearningGoal = async (req, res) => {
 
 const getLearningGoalsByUser =  async (req, res) => {
         try {
-            const { authorId } = req.params;
+            const { authorId } = req.query;
             
-            // Use .populate('author') to get user details instead of just the ID
-            const goals = await LearningGoal.find({ author: authorId }).populate('author', 'firstName lastName email');
+            const goals = await LearningGoal.find({ author: authorId });
             
             res.status(200).json(goals);
         } catch (error) {

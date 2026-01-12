@@ -19,7 +19,7 @@ export default function SignUp() {
             result => {
                 console.log(result);
                 if (result.status == 201) {
-                    navigate('/');
+                    navigate('/login');
                 } else {
                     alert("An error occurred!!!")
                 }
