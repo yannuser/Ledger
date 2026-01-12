@@ -1,31 +1,29 @@
 // import './App.css'
-import { Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
-import SignUp from './components/SignUp';
-import Home from './components/Home';
+import { Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import Home from "./components/Home";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 function App() {
   const [user, setUser] = useState(null);
 
   const handleUser = useCallback((x) => {
-      setUser(x)
-  }, [])
+    setUser(x);
+  }, []);
 
   console.log(user);
-  
 
   return (
     <>
-     
       <Routes>
-        <Route path="/" element={<Login handleUser={handleUser}/>} />
+        <Route path="/" element={<Login handleUser={handleUser} />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/home" element={<Home  authorId={user}/>} />
+        <Route path="/home" element={<Home authorId={user} />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
