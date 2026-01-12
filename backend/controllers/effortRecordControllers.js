@@ -33,7 +33,7 @@ const createEffort = async (req, res) => {
 
 const getEffortsByUser = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.query;
         const efforts = await EffortRecord.find({ author: userId }).populate('goal', 'title');
         res.status(200).json(efforts);
     } catch (error) {
