@@ -5,7 +5,6 @@ import axios from "axios";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import "./login.css";
 
 export default function Login({ handleUser }) {
   const [email, setEmail] = useState("");
@@ -55,7 +54,7 @@ export default function Login({ handleUser }) {
 
   return (
     <>
-      <div className="log-in__wrapper">
+      <div className="form__wrapper">
         <Form onSubmit={handleSubmit} className="shadow p-4 bg-white rounded">
           <div className="h4 mb-2 text-center">Log In</div>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -85,7 +84,7 @@ export default function Login({ handleUser }) {
             </Form.Control.Feedback>
           </Form.Group>
           <Button className="w-100 mt-4" variant="primary" type="submit">
-            Submit
+            Login
           </Button>
           <div className="d-grid justify-content-end">
             <Button className="text-muted px-0" variant="link">
