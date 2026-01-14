@@ -14,7 +14,6 @@ export default function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     axios
       .post("http://localhost:5000/User/register", {
         firstname,

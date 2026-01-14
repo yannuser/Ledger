@@ -6,6 +6,7 @@ import axios from "axios";
 export default function GoalDetails() {
   const { goalId } = useParams();
   const [goal, setGoal] = useState({});
+  const [efforts, setEfforts] = useState([]);
   console.log("Goal id", goalId);
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export default function GoalDetails() {
             params: { id: goalId },
           })
           .then((result) => {
-            console.log(result);
+            console.log(result.data.efforts);
+            setEfforts(result.data.efforts);
             setGoal(result.data);
           });
       } catch (error) {
@@ -28,8 +30,12 @@ export default function GoalDetails() {
 
   return (
     <>
-      <h2>Show me what you got: {goal.title}</h2>
-      <h3>Show me what you got: {goal.description}</h3>
+      <h2>TITLE: {goal.title}</h2>
+      <h3>DESCRIPTION: {goal.description}</h3>
+      <h4>EFFORTS</h4>
+      <ol>
+        {efforts.length > 0 && efforts.map((effort) => <li>{effort}</li>)}
+      </ol>
     </>
   );
 }
