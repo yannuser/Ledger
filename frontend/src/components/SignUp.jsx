@@ -24,7 +24,7 @@ export default function SignUp() {
     if (!password) newErrors.password = "Password is required";
     else if (password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    
+
     return newErrors;
   };
 
@@ -37,7 +37,13 @@ export default function SignUp() {
       setErrors(formErrors);
     } else {
       setErrors({});
-      console.log("Sign up attempted with:", {firstname, lastname, dateOfBirth, email, password });
+      console.log("Sign up attempted with:", {
+        firstname,
+        lastname,
+        dateOfBirth,
+        email,
+        password,
+      });
       // Here you would typically send a request to your server
     }
 
@@ -52,7 +58,7 @@ export default function SignUp() {
       .then((result) => {
         console.log(result);
         if (result.status == 201) {
-          navigate("/login");
+          navigate("/");
         } else {
           alert("An error occurred!!!");
         }
@@ -62,80 +68,71 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="heading">SIGN UP</div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="firstname">First name</label>
-          <input
-            type="text"
-            id="firstname"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="lastname">Last name</label>
-          <input
-            type="text"
-            id="lastname"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="dateOfBirth">Date Of Birth ( not required )</label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <input type="submit" />
-      </form>
-      <p>
-        Have an account ? <Link to="/"> Login </Link>
-      </p>
-
       <div className="form__wrapper">
         <div className="form__wrapper">
           <Form onSubmit={handleSubmit} className="shadow p-4 bg-white rounded">
-            <div className="h4 mb-2 text-center">Log In</div>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                isInvalid={!!errors.email}
-              />
-              <Form.Control.Feedback type="invalid">
+            <div className="h4 mb-2 text-center">Sign up</div>
+            <div className="row">
+              <Form.Group className="mb-3 col" controlId="formBasicName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter name"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                  required
+                  // isInvalid={!!errors.email}
+                />
+                {/* <Form.Control.Feedback type="invalid">
                 {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
+              </Form.Control.Feedback> */}
+              </Form.Group>
+
+              <Form.Group className="mb-3 col" controlId="formBasicLastName">
+                <Form.Label>Last name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter last name"
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                  required
+                  // isInvalid={!!errors.email}
+                />
+                {/* <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback> */}
+              </Form.Group>
+            </div>
+
+            <div className="row">
+              <Form.Group className="mb-3 col" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3 col" controlId="formBasicDate">
+                <Form.Label>Birthdate</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  // isInvalid={!!errors.email}
+                />
+                {/* <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback> */}
+              </Form.Group>
+            </div>
+
             <Form.Group className="mb-3X" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
@@ -150,16 +147,12 @@ export default function SignUp() {
               </Form.Control.Feedback>
             </Form.Group>
             <Button className="w-100 mt-4" variant="primary" type="submit">
-              Login
+              Sign up
             </Button>
-            <div className="d-grid justify-content-end">
-              <Button className="text-muted px-0" variant="link">
-                Forgot password?
-              </Button>
-            </div>
+
             <div className="d-grid justify-content-start">
               <Button className="text-muted px-0 py-3" variant="link">
-                Already have an account? <Link to="/signup"> Sign up </Link>
+                Don't have an account? <Link to="/"> Log in </Link>
               </Button>
             </div>
           </Form>
