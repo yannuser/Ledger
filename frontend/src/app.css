@@ -11,3 +11,18 @@
     background-color: #363636;
     position: relative;
 }
+
+/* // Source - https://stackoverflow.com/a
+// Posted by Ian A
+// Retrieved 2026-01-15, License - CC BY-SA 4.0 */
+.normal-text,
+.normal-text:hover,
+.normal-text:visited,
+.normal-text:active {
+  color: black;
+  text-decoration: none;
+}
+
+.normal-text:hover{
+    cursor: pointer;
+}

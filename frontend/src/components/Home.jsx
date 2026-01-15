@@ -3,6 +3,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+import ListGroup from "react-bootstrap/ListGroup";
+
 export default function Home({ authorId }) {
   const [learningData, setLearningData] = useState([]);
   const [effortData, setEffortData] = useState([]);
@@ -52,22 +54,34 @@ export default function Home({ authorId }) {
     <>
       {loading && <div>Loading</div>}
       {!loading && (
-        <div>
-          <div>
-            <h2>Learning goals</h2>
-            {learningData.map((item) => (
-              <p>
-                <Link to={"/home/" + item._id}>Click me</Link>
-                {item.title} : <span>{item.description}</span>
-              </p>
-            ))}
+        <div className="m-5">
+          <div className="p-1">
+          <div className="h2">Goals</div>
+            <ListGroup>
+              {learningData.map((item) => (
+                <Link to={"/home/" + item._id} className="normal-text">
+                  <ListGroup.Item className="d-flex justify-content-between align-items-start my-1 rounded">
+                    <div className="ms-2 me-auto">
+                      <div className="fw-bold">{item.title}</div>
+                      {item.description || "No description"}
+                    </div>
+                  </ListGroup.Item>
+                </Link>
+              ))}
+            </ListGroup>
           </div>
-          <div>
-            <h2>Effort record</h2>
+
+          <div className="mt-5 p-1">
+            <div className="h2">Efforts</div>
             {effortData.map((item) => (
-              <p>
-                {item.title} : <span>{item.description}</span>
-              </p>
+              <ListGroup>
+                <ListGroup.Item className="d-flex justify-content-between align-items-start my-1 rounded">
+                  <div className="ms-2 me-auto">
+                    <div className="fw-bold">{item.title}</div>
+                    {item.description || "No description"}
+                  </div>
+                </ListGroup.Item>
+              </ListGroup>
             ))}
           </div>
         </div>
