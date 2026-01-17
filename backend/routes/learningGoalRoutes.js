@@ -1,5 +1,5 @@
 import express from "express";
-import learningGoalControllers from "../controllers/learningGoalControllers.js";
+import learningGoalControllers from "../controllers/learningGoalController.js";
 
 const router = express.Router();
 

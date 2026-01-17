@@ -13,7 +13,7 @@ export default function GoalDetails() {
     const fetchData = async () => {
       try {
         await axios
-          .get("http://localhost:5000/LearningGoal/getGoal", {
+          .get("http://localhost:5000/learningGoal/getGoal", {
             params: { id: goalId },
           })
           .then((result) => {

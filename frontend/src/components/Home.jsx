@@ -21,7 +21,7 @@ export default function Home({ authorId }) {
       }
       try {
         await axios
-          .get("http://localhost:5000/LearningGoal/getByUser/", {
+          .get("http://localhost:5000/learningGoal/getByUser/", {
             params: { authorId },
           })
           .then((result) => {
@@ -32,7 +32,7 @@ export default function Home({ authorId }) {
           });
 
         await axios
-          .get("http://localhost:5000/EffortRecord/getByUser", {
+          .get("http://localhost:5000/effortRecord/getByUser", {
             params: { userId: authorId },
           })
           .then((result) => {
@@ -59,7 +59,7 @@ export default function Home({ authorId }) {
           <div className="h2">Goals</div>
             <ListGroup>
               {learningData.map((item) => (
-                <Link to={"/home/" + item._id} className="normal-text">
+                <Link to={"/home/" + item._id} className="normal-text my-2">
                   <ListGroup.Item className="d-flex justify-content-between align-items-start my-1 rounded">
                     <div className="ms-2 me-auto">
                       <div className="fw-bold">{item.title}</div>

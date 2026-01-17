@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import authRoutes from './routes/autRoutes.js'
 import userRoutes from './routes/userRoutes.js';
 import learningGoalRoutes from "./routes/learningGoalRoutes.js";
 import effortRecordRoutes from "./routes/effortRecordRoutes.js"
@@ -17,9 +18,10 @@ app.use(cors());
 app.use(express.json()); // Allows the server to accept JSON data
 
 // routes
-app.use('/User', userRoutes);
-app.use('/LearningGoal', learningGoalRoutes);
-app.use('/EffortRecord', effortRecordRoutes);
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
+app.use('/learningGoal', learningGoalRoutes);
+app.use('/effortRecord', effortRecordRoutes);
 
 
 // MongoDB Connection

@@ -34,7 +34,7 @@ export default function Login({ handleUser }) {
       console.log("Login attempted with:", { email, password });
       // axios.get(URL, CONFIG_OBJECT)
       axios
-        .get("http://localhost:5000/User/login", {
+        .get("http://localhost:5000/user/login", {
           params: {
             email: email,
             password: password,

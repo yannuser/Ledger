@@ -1,12 +1,12 @@
 import express from "express";
-import learningGoalControllers from "../controllers/effortRecordControllers.js";
+import effortRecordControllers from "../controllers/effortRecordController.js";
 
 const router = express.Router();
 
-router.post("/create",learningGoalControllers.createEffort);
-router.put("/update/:id",learningGoalControllers.updateEffort);
-router.delete("/delete/:id", learningGoalControllers.deleteEffort);
-router.get("/getByUser", learningGoalControllers.getEffortsByUser);
+router.post("/create",effortRecordControllers.createEffort);
+router.put("/update/:id",effortRecordControllers.updateEffort);
+router.delete("/delete/:id", effortRecordControllers.deleteEffort);
+router.get("/getByUser", effortRecordControllers.getEffortsByUser);
 
 
 export default router;

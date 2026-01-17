@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "./User.js"
 
 const learningGoalSchema = new mongoose.Schema({
     title : {
