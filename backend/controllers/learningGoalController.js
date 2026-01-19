@@ -74,7 +74,7 @@ const getLearningGoalsByUser =  async (req, res) => {
         try {
             const { id } = req.query;
             
-            const goals = await LearningGoal.find({ id });
+            const goals = await LearningGoal.find({ author: id });
             
             res.status(200).json(goals);
         } catch (error) {

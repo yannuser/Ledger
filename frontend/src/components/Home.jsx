@@ -8,10 +8,10 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Home() {
   const [learningData, setLearningData] = useState([]);
-  // const [effortData, setEffortData] = useState([]);
+  const [effortData, setEffortData] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { auth, logout } = useAuth();
+  const { auth } = useAuth();
   console.log(auth);
 
   useEffect(() => {
@@ -22,32 +22,35 @@ export default function Home() {
         navigate("/");
         return;
       }
-      const id = auth?.user?.UserInfo?.id
+      const id = auth?.user?.UserInfo?.id;
       try {
         await axios
           .get("http://localhost:5000/learningGoal/getByUser/", {
             params: { id },
             headers: {
-              "Authorization": `Bearer ${auth.token}`,
+              Authorization: `Bearer ${auth.token}`,
             },
           })
           .then((result) => {
             console.log("Goal res", result);
             if (result.status == 200) {
               setLearningData(result.data);
-            }           
+            }
           });
 
-        // await axios
-        //   .get("http://localhost:5000/effortRecord/getByUser", {
-        //     params: { userId: user },
-        //   })
-        //   .then((result) => {
-        //     console.log("Effort res", result);
-        //     if (result.status == 200) {
-        //       setEffortData(result.data);
-        //     }
-        //   });
+        await axios
+          .get("http://localhost:5000/effortRecord/getByUser", {
+            params: { userId: id },
+            headers: {
+              Authorization:  `Bearer ${auth.token}`
+            }
+          })
+          .then((result) => {
+            console.log("Effort res", result);
+            if (result.status == 200) {
+              setEffortData(result.data);
+            }
+          });
       } catch (error) {
         console.error(error.message);
       }
@@ -77,20 +80,21 @@ export default function Home() {
               ))}
             </ListGroup>
           </div>
-              <p>{logout}</p>
-          {/* <div className="mt-5 p-1">
-            <div className="h2">Efforts</div>
-            {effortData.map((item) => (
-              <ListGroup>
-                <ListGroup.Item className="d-flex justify-content-between align-items-start my-1 rounded">
-                  <div className="ms-2 me-auto">
-                    <div className="fw-bold">{item.title}</div>
-                    {item.description || "No description"}
-                  </div>
-                </ListGroup.Item>
-              </ListGroup>
-            ))}
-          </div> */}
+          {
+            <div className="mt-5 p-1">
+              <div className="h2">Efforts</div>
+              {effortData.map((item) => (
+                <ListGroup>
+                  <ListGroup.Item className="d-flex justify-content-between align-items-start my-1 rounded">
+                    <div className="ms-2 me-auto">
+                      <div className="fw-bold">{item.title}</div>
+                      {item.description || "No description"}
+                    </div>
+                  </ListGroup.Item>
+                </ListGroup>
+              ))}
+            </div>
+          }
         </div>
       )}
     </>
