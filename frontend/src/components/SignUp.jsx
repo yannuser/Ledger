@@ -48,7 +48,7 @@ export default function SignUp() {
     }
 
     axios
-      .post("http://localhost:5000/user/register", {
+      .post("http://localhost:5000/auth/register", {
         firstname,
         lastname,
         dateOfBirth,

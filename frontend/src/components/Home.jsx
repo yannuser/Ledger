@@ -1,59 +1,59 @@
 import React from "react";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+// import axios from "axios";
+import { useState } from "react";
+// import { useNavigate, Link } from "react-router-dom";
 
 import ListGroup from "react-bootstrap/ListGroup";
-
-export default function Home({ authorId }) {
-  const [learningData, setLearningData] = useState([]);
-  const [effortData, setEffortData] = useState([]);
+// { authorId }
+export default function Home() {
+  // const [learningData, setLearningData] = useState([]);
+  // const [effortData, setEffortData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      console.log(authorId);
-      if (authorId == null) {
-        navigate("/");
-        return;
-      }
-      try {
-        await axios
-          .get("http://localhost:5000/learningGoal/getByUser/", {
-            params: { authorId },
-          })
-          .then((result) => {
-            console.log("Goal res", result);
-            if (result.status == 200) {
-              setLearningData(result.data);
-            }
-          });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     console.log(authorId);
+  //     if (authorId == null) {
+  //       navigate("/");
+  //       return;
+  //     }
+  //     try {
+  //       await axios
+  //         .get("http://localhost:5000/learningGoal/getByUser/", {
+  //           params: { authorId },
+  //         })
+  //         .then((result) => {
+  //           console.log("Goal res", result);
+  //           if (result.status == 200) {
+  //             setLearningData(result.data);
+  //           }
+  //         });
 
-        await axios
-          .get("http://localhost:5000/effortRecord/getByUser", {
-            params: { userId: authorId },
-          })
-          .then((result) => {
-            console.log("Effort res", result);
-            if (result.status == 200) {
-              setEffortData(result.data);
-            }
-          });
-      } catch (error) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
+  //       await axios
+  //         .get("http://localhost:5000/effortRecord/getByUser", {
+  //           params: { userId: authorId },
+  //         })
+  //         .then((result) => {
+  //           console.log("Effort res", result);
+  //           if (result.status == 200) {
+  //             setEffortData(result.data);
+  //           }
+  //         });
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //     setLoading(false);
+  //   };
 
-    fetchData();
-  }, [authorId, navigate]);
-
+  //   fetchData();
+  // }, [authorId, navigate]);
+  
   return (
     <>
       {loading && <div>Loading</div>}
-      {!loading && (
+      {/* {!loading && (
         <div className="m-5">
           <div className="p-1">
           <div className="h2">Goals</div>
@@ -85,7 +85,7 @@ export default function Home({ authorId }) {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

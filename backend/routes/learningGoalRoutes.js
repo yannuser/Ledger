@@ -1,7 +1,9 @@
 import express from "express";
 import learningGoalControllers from "../controllers/learningGoalController.js";
+import verifyJWT from "../middleware/verifyJWT.js";
 
 const router = express.Router();
+router.use(verifyJWT)
 
 router.post("/create",learningGoalControllers.createLearningGoal);
 router.put("/update/:id",learningGoalControllers.updateLearningGoal);

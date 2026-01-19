@@ -6,24 +6,27 @@ import Home from "./components/Home";
 
 import { useState, useCallback } from "react";
 import GoalDetails from "./components/GoalDetails";
+import { AuthProvider } from './AuthContext';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [auth, setAuth] = useState({});
 
-  const handleUser = useCallback((x) => {
-    setUser(x);
+  const handleAuth = useCallback((x) => {
+    setAuth(x);
   }, []);
 
-  console.log(user);
+  console.log(auth);
 
   return (
     <>
+    <AuthProvider>
       <Routes>
-        <Route path="/" element={<Login handleUser={handleUser} />} />
+        <Route path="/" element={<Login handleAuth={handleAuth} />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home authorId={user} />} />
+        <Route path="/home" element={<Home authorId={auth} />} />
         <Route path="/home/:goalId" element={<GoalDetails />}/>
       </Routes>
+      </AuthProvider>
     </>
   );
 }

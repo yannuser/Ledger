@@ -15,4 +15,4 @@ const loginLimiter = rateLimit({
     legacyHeaders: false
 })
 
-module.exports = loginLimiter
+export default loginLimiter

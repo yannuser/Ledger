@@ -3,28 +3,31 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 
-const login = asyncHandler(async (req,res) => {
+const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
+    console.log(email, password);
+
 
     if (!email || !password) {
-        return res.status(400).json({ message : 'All fields are required' })
+        return res.status(400).json({ message: 'All fields are required' })
     }
 
-    const foundUser = await User.findOne((email)).exec
+    const foundUser = await User.findOne({ email })
+    console.log(foundUser);
 
     if (!foundUser) {
-        return res.status(401).json({ message : 'Unauthorized' })
+        return res.status(401).json({ message: 'Unauthorized' })
     }
 
-    const match =  await bcrypt.compare(password, foundUser.password)
+    const match = await bcrypt.compare(password, foundUser.password)
 
-    if (!match) return res.status(401).json({ message : 'Unauthorized'})
+    if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
     const accessToken = jwt.sign(
         {
             "UserInfo": {
                 "email": foundUser.email,
-                "roles": foundUser.roles
+                // "roles": foundUser.roles
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -49,13 +52,76 @@ const login = asyncHandler(async (req,res) => {
     res.json({ accessToken })
 })
 
-const refresh = asyncHandler(async (req,res) => {
-    
-})
+const refresh = async (req, res) => {
+    const cookies = req.cookies
 
-const logout = asyncHandler(async (req,res) => {
-    
-})
+    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' })
 
-const authController = { login, refresh, logout }
+    const refreshToken = cookies.jwt
+
+    jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        asyncHandler(async (err, decoded) => {
+            if (err) return res.status(403).json({ message: 'Forbidden' })
+
+            const foundUser = await User.findOne({ email: decoded.email }).exec()
+
+            if (!foundUser) return res.status(401).json({ message: 'Unauthorized' })
+
+            const accessToken = jwt.sign(
+                {
+                    "UserInfo": {
+                        "email": foundUser.email,
+                        // "roles": foundUser.roles
+                    }
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '15m' }
+            )
+
+            res.json({ accessToken })
+        })
+    )
+}
+
+const logout = (req, res) => {
+    const cookies = req.cookies
+    if (!cookies?.jwt) return res.sendStatus(204) //No content
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
+    res.json({ message: 'Cookie cleared' })
+}
+
+const register = asyncHandler(async (req, res) => {
+    try {
+        const { firstname, lastname, dateOfBirth, email, password } = req.body; console.log(req.body);
+        // Check if the user exists
+        const existingUser = await User.findOne({ email: email });
+        console.log(existingUser);
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already registered.' });
+        }
+        // encrypt password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        console.log(hashedPassword);
+        // create new user in the database
+        const user = await User.create({
+            firstname,
+            lastname,
+            dateOfBirth: dateOfBirth || null,
+            email,
+            password: hashedPassword,
+        });
+
+        res.status(201).json({
+            message: "User registered successfully",
+            user
+        });
+
+    } catch (err) {
+        return res.status(400).json({ error: err.message });
+    }
+})
+const authController = { login, refresh, logout, register }
 export default authController

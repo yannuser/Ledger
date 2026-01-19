@@ -1,7 +1,8 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../AuthContext";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -11,6 +12,7 @@ export default function Login({ handleUser }) {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const validateForm = () => {
     const newErrors = {};
@@ -33,21 +35,21 @@ export default function Login({ handleUser }) {
       setErrors({});
       console.log("Login attempted with:", { email, password });
       // axios.get(URL, CONFIG_OBJECT)
-      axios
-        .get("http://localhost:5000/user/login", {
-          params: {
-            email: email,
-            password: password,
-          },
+      const response = axios
+        .post("http://localhost:5000/auth/", {
+          email: email,
+          password: password,
         })
         .then((result) => {
           navigate("/home");
           console.log(result);
-          handleUser(result.data.user._id);
         })
         .catch((err) => {
           console.log(err);
         });
+      const {accessToken} = response.data
+      login(accessToken.token);
+      handleUser(email, accessToken);
     }
   };
 

@@ -35,32 +35,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.query;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email" });
-    }
-    // Compare the provided password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
-    
-    res.status(200).json({
-      message: "Successfully logged in",
-      user: {
-        _id: user._id,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const getLoggedInUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -135,5 +109,5 @@ const getUsers = async (req, res) => {
   }
 };
 
-const userControllers = {registerUser, loginUser, getLoggedInUser, getUserById, updateUser,deleteUser, getUsers}; //which is fetched by routes as we imported there
+const userControllers = {registerUser, getLoggedInUser, getUserById, updateUser,deleteUser, getUsers}; //which is fetched by routes as we imported there
 export default userControllers;
