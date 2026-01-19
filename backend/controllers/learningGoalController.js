@@ -72,9 +72,9 @@ const deleteLearningGoal = async (req, res) => {
 
 const getLearningGoalsByUser =  async (req, res) => {
         try {
-            const { authorId } = req.query;
+            const { email } = req.query;
             
-            const goals = await LearningGoal.find({ author: authorId });
+            const goals = await LearningGoal.find({ email });
             
             res.status(200).json(goals);
         } catch (error) {

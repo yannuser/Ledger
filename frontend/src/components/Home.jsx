@@ -1,28 +1,32 @@
 import React from "react";
 // import axios from "axios";
-import { useState } from "react";
+// import { useState, useEffect } from "react";
 // import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 import ListGroup from "react-bootstrap/ListGroup";
-// { authorId }
+
 export default function Home() {
   // const [learningData, setLearningData] = useState([]);
   // const [effortData, setEffortData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  console.log(user);
+  
 
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setLoading(true);
-  //     console.log(authorId);
-  //     if (authorId == null) {
+  //     console.log(auth);
+  //     if (auth) {
   //       navigate("/");
   //       return;
   //     }
   //     try {
   //       await axios
   //         .get("http://localhost:5000/learningGoal/getByUser/", {
-  //           params: { authorId },
+  //           params: { auth },
   //         })
   //         .then((result) => {
   //           console.log("Goal res", result);
@@ -33,7 +37,7 @@ export default function Home() {
 
   //       await axios
   //         .get("http://localhost:5000/effortRecord/getByUser", {
-  //           params: { userId: authorId },
+  //           params: { userId: auth },
   //         })
   //         .then((result) => {
   //           console.log("Effort res", result);
@@ -48,11 +52,11 @@ export default function Home() {
   //   };
 
   //   fetchData();
-  // }, [authorId, navigate]);
-  
+  // }, [auth, navigate]);
+
   return (
     <>
-      {loading && <div>Loading</div>}
+      {/* {loading && <div>Loading</div>} */}
       {/* {!loading && (
         <div className="m-5">
           <div className="p-1">
@@ -86,6 +90,17 @@ export default function Home() {
           </div>
         </div>
       )} */}
+      <nav>
+        <h1>MyApp</h1>
+        {user ? (
+          <div>
+            <span>Welcome, {user?.userInfo?.email}!</span>
+            <button onClick={logout}>Logout</button>
+          </div>
+        ) : (
+          <p>didn't work big boi</p>
+        )}
+      </nav>
     </>
   );
 }

@@ -7,7 +7,7 @@ import { AuthContext } from "../AuthContext";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export default function Login({ handleUser }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
@@ -35,21 +35,21 @@ export default function Login({ handleUser }) {
       setErrors({});
       console.log("Login attempted with:", { email, password });
       // axios.get(URL, CONFIG_OBJECT)
-      const response = axios
+      axios
         .post("http://localhost:5000/auth/", {
           email: email,
           password: password,
         })
         .then((result) => {
+          const { accessToken } = result.data;
+          login(accessToken);
           navigate("/home");
           console.log(result);
         })
         .catch((err) => {
           console.log(err);
         });
-      const {accessToken} = response.data
-      login(accessToken.token);
-      handleUser(email, accessToken);
+      console.log();
     }
   };
 
