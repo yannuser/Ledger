@@ -1,4 +1,4 @@
-  9import React from "react";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -35,7 +35,7 @@ export default function Home() {
             console.log("Goal res", result);
             if (result.status == 200) {
               setLearningData(result.data);
-            }¾t5urfhcbn           
+            }           
           });
 
         // await axios
