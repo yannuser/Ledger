@@ -22,6 +22,7 @@ export default function Home() {
     author: auth?.user?.UserInfo?.id,
     efforts: [], // To store selected effort IDs
   });
+  // const [refreshTrigger, setRefreshTrigger] = useState(0); // The "Signal"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,7 +100,8 @@ export default function Home() {
     };
 
     axios
-      .post("http://localhost:5000/learningGoal", 
+      .post(
+        "http://localhost:5000/learningGoal",
         {
           ...goalForm,
         },
@@ -107,6 +109,10 @@ export default function Home() {
       )
       .then((result) => {
         console.log(result);
+        const newGoalFromDB = result.data.learningGoal;
+
+        // 2. Add it to your existing list immediately
+        setLearningData((prevGoals) => [...prevGoals, newGoalFromDB]);
       })
       .catch((err) => console.log(err));
 
