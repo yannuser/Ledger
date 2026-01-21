@@ -5,11 +5,11 @@ import verifyJWT from "../middleware/verifyJWT.js";
 const router = express.Router();
 router.use(verifyJWT)
 
-router.post("/create",learningGoalControllers.createLearningGoal);
-router.put("/update/:id",learningGoalControllers.updateLearningGoal);
-router.delete("/delete/:id", learningGoalControllers.deleteLearningGoal);
-router.get("/getByUser", learningGoalControllers.getLearningGoalsByUser);
-router.get("/getGoal", learningGoalControllers.getLearningGoal);
+router.route("/").post(learningGoalControllers.createLearningGoal);
+router.route("/update/:id").put(learningGoalControllers.updateLearningGoal);
+router.route("/delete/:id").delete(learningGoalControllers.deleteLearningGoal);
+router.route("/getByUser").get(learningGoalControllers.getLearningGoalsByUser);
+router.route("/getGoal").get(learningGoalControllers.getLearningGoal);
 
 
 export default router;

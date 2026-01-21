@@ -5,7 +5,8 @@ const saltRounds = 10;
 
 const registerUser = async (req, res) => {
   try {
-    const { firstname, lastname, dateOfBirth, email, password } = req.body;    console.log(req.body);
+    const { firstname, lastname, dateOfBirth, email, password } = req.body;    
+    console.log(req.body);
     // Check if the user exists
     const existingUser = await  User.findOne({email : email});
     console.log(existingUser);

@@ -15,7 +15,7 @@ const createLearningGoal = async (req,res) => {
                 title, 
                 description : description || null, 
                 status,
-                author
+                author,
             })
         
             res.status(201).json({

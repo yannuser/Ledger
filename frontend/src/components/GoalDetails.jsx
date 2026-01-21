@@ -8,7 +8,7 @@ export default function GoalDetails() {
   const { goalId } = useParams();
   const [goal, setGoal] = useState({});
   const [efforts, setEfforts] = useState([]);
-    const { auth } = useAuth();
+  const { auth } = useAuth();
   console.log("Goal id", goalId);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export default function GoalDetails() {
           .get("http://localhost:5000/learningGoal/getGoal", {
             params: { id: goalId },
             headers: {
-              Authorization:  `Bearer ${auth.token}`
-            }
+              Authorization: `Bearer ${auth.token}`,
+            },
           })
           .then((result) => {
             console.log(result.data.efforts);
@@ -31,7 +31,7 @@ export default function GoalDetails() {
       }
     };
     fetchData();
-  }, []);
+  }, [auth.token, goalId]);
 
   return (
     <>
