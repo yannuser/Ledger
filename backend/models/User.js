@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
         minLength: [8, "Must be at least 8 characters long"],
         validate: {
             validator: function (value) {
-            // Custom validation logic
+            
             return (
                 /[A-Z]/.test(value) && // At least one uppercase letter
                 /[a-z]/.test(value) && // At least one lowercase letter

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const effortRecordSchema = new mongoose.Schema({
     title: {
         type: String,
-        unique: true, // Be careful: this means no two efforts can have the same name ever
+        unique: true, 
         required: [true, 'A name is required']
     },
     description: {
@@ -13,12 +13,12 @@ const effortRecordSchema = new mongoose.Schema({
     goal: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'LearningGoal',
-        required: false // Optional link
+        required: false 
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true // Every effort must belong to someone
+        required: true 
     }
 }, { timestamps: true });
 

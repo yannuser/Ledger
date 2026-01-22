@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    //  Reset to initial structure (safer than null)
     setAuth({ token: null, user: null });
   };
 

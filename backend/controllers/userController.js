@@ -7,17 +7,16 @@ const registerUser = async (req, res) => {
   try {
     const { firstname, lastname, dateOfBirth, email, password } = req.body;    
     console.log(req.body);
-    // Check if the user exists
     const existingUser = await  User.findOne({email : email});
     console.log(existingUser);
 
     if (existingUser) {
         return res.status(400).json({ message: 'Email already registered.' });
     }
-    // encrypt password
+
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     console.log(hashedPassword);
-    // create new user in the database
+
     const user = await User.create({
       firstname, 
       lastname, 
@@ -63,12 +62,12 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
-    // Find the user by ID
+
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    // Update the fields
+
     if (firstname) user.firstname = firstname;
     if (lastname) user.lastname = lastname;
     if (email) user.email = email;

@@ -18,11 +18,10 @@ export default function Home() {
   const [goalForm, setGoalForm] = useState({
     title: "",
     description: "",
-    status: "ongoing", // Default enum value
+    status: "ongoing", 
     author: auth?.user?.UserInfo?.id,
-    efforts: [], // To store selected effort IDs
+    efforts: [], 
   });
-  // const [refreshTrigger, setRefreshTrigger] = useState(0); // The "Signal"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,7 +94,7 @@ export default function Home() {
     console.log(auth.token);
     const config = {
       headers: {
-        Authorization: `Bearer ${auth.token}`, // This matches how we split it in the backend
+        Authorization: `Bearer ${auth.token}`, 
       },
     };
 
@@ -111,7 +110,7 @@ export default function Home() {
         console.log(result);
         const newGoalFromDB = result.data.learningGoal;
 
-        // 2. Add it to your existing list immediately
+        // Add new goals to my existing list immediately
         setLearningData((prevGoals) => [...prevGoals, newGoalFromDB]);
       })
       .catch((err) => console.log(err));

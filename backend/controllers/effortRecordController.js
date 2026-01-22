@@ -50,13 +50,11 @@ const updateEffort = async (req, res) => {
         
         console.log(oldEffort);
         
-        // If the goal link is changing, we need to clean up the LearningGoal arrays
+        // If the goal link is changing, clean up the LearningGoal arrays
         if ( oldEffort.goal?.toString() !== goal) {
-            // Remove from old goal array
             if (oldEffort.goal) {
                 await LearningGoal.findByIdAndUpdate(oldEffort.goal, { $pull: { efforts: id } }, { new: true });
             }
-            // Add to new goal array
             if (goal) {
                 await LearningGoal.findByIdAndUpdate(goal, { $push: { efforts: id } });
             }
@@ -78,7 +76,7 @@ const deleteEffort = async (req, res) => {
     try {
         const effort = await EffortRecord.findByIdAndDelete(req.params.id);
         
-        // Cleanup: If it was linked to a goal, remove it from the goal's list
+        // Cleanup: If it was linked to a goal, remove from the goal's list
         if (effort && effort.goal) {
             await LearningGoal.findByIdAndUpdate(effort.goal, {
                 $pull: { efforts: effort._id }

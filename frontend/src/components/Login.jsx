@@ -34,7 +34,6 @@ export default function Login() {
     } else {
       setErrors({});
       console.log("Login attempted with:", { email, password });
-      // axios.get(URL, CONFIG_OBJECT)
       axios
         .post("http://localhost:5000/auth/", {
           email: email,

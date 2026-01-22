@@ -12,13 +12,13 @@ const learningGoalSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['ongoing', 'paused', 'finished'], // Allowed options
+        enum: ['ongoing', 'paused', 'finished'], 
         default: 'ongoing',
         required : true,
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Must match the name used in mongoose.model('User', ...)
+        ref: 'User', 
         required: true
     },
     efforts: [{

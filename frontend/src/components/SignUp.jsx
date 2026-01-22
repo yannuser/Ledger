@@ -44,7 +44,6 @@ export default function SignUp() {
         email,
         password,
       });
-      // Here you would typically send a request to your server
     }
 
     axios
