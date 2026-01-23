@@ -4,8 +4,12 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
-import { ListGroup, Button, Form, Dropdown } from "react-bootstrap";
-import { PlusCircle, ArrowLeft, Trash, ThreeDotsVertical } from "react-bootstrap-icons";
+import { Button, Form, Dropdown } from "react-bootstrap";
+import {
+  PlusCircle,
+  ArrowLeft,
+  ThreeDotsVertical,
+} from "react-bootstrap-icons";
 
 export default function Home() {
   const [learningData, setLearningData] = useState([]);
@@ -21,6 +25,12 @@ export default function Home() {
     status: "ongoing",
     author: auth?.user?.UserInfo?.id,
     efforts: [],
+  });
+  const [effortForm, setEffortForm] = useState({
+    title: "",
+    description: "",
+    author: auth?.user?.UserInfo?.id,
+    goal: "",
   });
   const config = {
     headers: {
@@ -78,6 +88,10 @@ export default function Home() {
     setGoalForm({ ...goalForm, [e.target.name]: e.target.value });
   };
 
+  const handleEffortChange = (e) => {
+    setEffortForm({ ...effortForm, [e.target.name]: e.target.value });
+  };
+
   const handleEffortToggle = (effortId) => {
     const isSelected = goalForm.efforts.includes(effortId);
     if (isSelected) {
@@ -116,6 +130,28 @@ export default function Home() {
       .catch((err) => console.log(err));
 
     setView("list");
+  };
+
+  const handleEffortSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitting New Goal:", effortForm);
+    console.log(auth.token);
+
+    axios
+      .post(
+        "http://localhost:5000/effortRecord/create",
+        { ...effortForm },
+        config,
+      )
+      .then((res) => {
+        console.log(res);
+        const newEffortFromDB = res.data.learningGoal;
+
+        // Add new goals to my existing list immediately
+        setEffortData((prevEfforts) => [...prevEfforts, newEffortFromDB]);
+      }).catch(err => console.log(err))
+
+      setView("list");
   };
 
   if (view === "add-goal") {
@@ -250,13 +286,94 @@ export default function Home() {
         >
           <ArrowLeft className="me-2" size={20} /> Back to Dashboard
         </Button>
-        <div className="card border-0 shadow-sm rounded-4">
-          <div className="card-body p-4">
-            <h2 className="h4 mb-3 fw-bold">Add New Effort</h2>
-            {/* INSERT YOUR EFFORT FORM COMPONENT HERE */}
-            <p className="text-muted">
-              Form inputs for a new effort go here...
-            </p>
+
+        <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div className="card-header bg-white border-bottom p-4">
+            <h2 className="h4 mb-0 fw-bold text-dark">Add New Effort</h2>
+          </div>
+
+          <div className="card-body p-4 bg-light bg-opacity-10">
+            <Form onSubmit={handleEffortSubmit}>
+              <div className="row">
+                <div className="col-md-8">
+                  {/* Title Field */}
+                  <Form.Group className="mb-4" controlId="formEffortTitle">
+                    <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
+                      Title
+                    </Form.Label>
+                    <Form.Control
+                      size="lg"
+                      type="text"
+                      placeholder="e.g., Read documentation"
+                      name="title"
+                      value={effortForm.title}
+                      onChange={handleEffortChange}
+                      required
+                      className="border-0 shadow-sm bg-white"
+                    />
+                  </Form.Group>
+
+                  {/* Description Field */}
+                  <Form.Group className="mb-4" controlId="formEffortDesc">
+                    <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
+                      Description
+                    </Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      placeholder="Describe the specific task..."
+                      name="description"
+                      value={effortForm.description}
+                      onChange={handleEffortChange}
+                      className="border-0 shadow-sm bg-white"
+                      style={{ resize: "none" }}
+                    />
+                  </Form.Group>
+                </div>
+
+                <div className="col-md-4">
+                  {/* Goal Selection Field */}
+                  <Form.Group className="mb-4" controlId="formEffortGoal">
+                    <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
+                      Linked Goal
+                    </Form.Label>
+                    <Form.Select
+                      name="goal"
+                      value={effortForm.goalId}
+                      onChange={handleEffortChange}
+                      className="border-0 shadow-sm bg-white"
+                    >
+                      <option value="">Select a Goal...</option>
+                      {learningData.map((goal) => (
+                        <option key={goal._id} value={goal._id}>
+                          {goal.title}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <Form.Text className="text-muted small mt-2 d-block">
+                      Link this effort to an existing goal to track progress.
+                    </Form.Text>
+                  </Form.Group>
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-end pt-3 border-top">
+                <Button
+                  variant="light"
+                  onClick={handleBack}
+                  className="me-3 px-4 fw-semibold text-secondary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="px-4 fw-semibold shadow-sm"
+                >
+                  Create Effort
+                </Button>
+              </div>
+            </Form>
           </div>
         </div>
       </div>
