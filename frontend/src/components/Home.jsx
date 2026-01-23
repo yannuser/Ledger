@@ -381,33 +381,25 @@ export default function Home() {
     );
   }
 
-  const handleGoalDelete = (id) => {
-    axios
-      .delete("http://localhost:5000/learningGoal/delete", {
-        ...config,
-        data: { id },
-      })
-      .then((res) => {
-        console.log(res);
-        const updated = learningData.filter((item) => item._id != id);
-        setLearningData(updated);
-      })
-      .catch((err) => {
-        // alert("An error occurred")
-        console.log(err);
-      });
-  };
+  const handleDelete = (id, action) => {
+    const goalDelete = "http://localhost:5000/learningGoal/delete";
+    const effortDelete = "http://localhost:5000/effortRecord/delete";
+    const link = action == "goal" ? goalDelete : effortDelete;
 
-  const handleEffortDelete = (id) => {
     axios
-      .delete("http://localhost:5000/effortRecord/delete", {
+      .delete(link, {
         ...config,
         data: { id },
       })
       .then((res) => {
         console.log(res);
-        const updated = effortData.filter((item) => item._id != id);
-        setEffortData(updated);
+        if (action == "goal") {
+          const updated = learningData.filter((item) => item._id != id);
+          setLearningData(updated);
+        } else {
+          const updated = effortData.filter((item) => item._id != id);
+          setEffortData(updated);
+        }
       })
       .catch((err) => {
         // alert("An error occurred")
@@ -474,7 +466,7 @@ export default function Home() {
                           </Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item
-                            onClick={() => handleGoalDelete(item._id)}
+                            onClick={() => handleDelete(item._id, "goal")}
                             className="text-danger rounded-2 py-2 fw-semibold"
                           >
                             Delete
@@ -526,7 +518,7 @@ export default function Home() {
                           </Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item
-                            onClick={() => handleEffortDelete(item._id)}
+                            onClick={() => handleDelete(item._id, "effort")}
                             className="text-danger rounded-2 py-2 fw-semibold"
                           >
                             Delete
