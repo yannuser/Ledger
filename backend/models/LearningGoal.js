@@ -23,7 +23,7 @@ const learningGoalSchema = new mongoose.Schema({
     },
     efforts: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'LearningEffort'
+        ref: 'EffortRecord'
     }]
 }, {timestamps: true});
 

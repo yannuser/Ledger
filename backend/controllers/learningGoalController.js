@@ -91,7 +91,8 @@ const getLearningGoalsByUser = async (req, res) => {
 const getLearningGoal = async (req, res) => {
     try {
         const { id } = req.query;
-        const goal = await LearningGoal.findById(id);
+        const goal = await LearningGoal.findById(id).populate('efforts');
+        console.log(goal);   
 
         res.status(200).json(goal)
     } catch (error) {

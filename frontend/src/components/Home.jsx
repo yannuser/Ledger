@@ -18,7 +18,6 @@ export default function Home() {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const [view, setView] = useState("list");
-  const handleBack = () => setView("list");
   const [goalForm, setGoalForm] = useState({
     title: "",
     description: "",
@@ -83,6 +82,8 @@ export default function Home() {
 
     fetchData();
   }, [auth.token]);
+
+  const handleBack = () => setView("list");
 
   const handleGoalChange = (e) => {
     setGoalForm({ ...goalForm, [e.target.name]: e.target.value });
@@ -233,17 +234,19 @@ export default function Home() {
                       style={{ maxHeight: "300px", overflowY: "auto" }}
                     >
                       {effortData.length > 0 ? (
-                        effortData.map((effort) => (
-                          <Form.Check
-                            key={effort._id || effort.title}
-                            type="checkbox"
-                            id={`check-${effort.title}`}
-                            label={effort.title}
-                            checked={goalForm.efforts.includes(effort._id)}
-                            onChange={() => handleEffortToggle(effort._id)}
-                            className="mb-2"
-                          />
-                        ))
+                        effortData
+                          .filter((effort) => !effort.goal)
+                          .map((effort) => (
+                            <Form.Check
+                              key={effort._id || effort.title}
+                              type="checkbox"
+                              id={`check-${effort.title}`}
+                              label={effort.title}
+                              checked={goalForm.efforts.includes(effort._id)}
+                              onChange={() => handleEffortToggle(effort._id)}
+                              className="mb-2"
+                            />
+                          ))
                       ) : (
                         <div className="text-muted small text-center py-3">
                           No efforts available to link.
