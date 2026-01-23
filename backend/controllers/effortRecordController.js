@@ -74,7 +74,8 @@ const updateEffort = async (req, res) => {
 
 const deleteEffort = async (req, res) => {
     try {
-        const effort = await EffortRecord.findByIdAndDelete(req.params.id);
+        const {id} = req.body
+        const effort = await EffortRecord.findByIdAndDelete(id);
         
         // Cleanup: If it was linked to a goal, remove from the goal's list
         if (effort && effort.goal) {

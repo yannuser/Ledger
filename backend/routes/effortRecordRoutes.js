@@ -7,7 +7,7 @@ router.use(verifyJWT)
 
 router.post("/create",effortRecordControllers.createEffort);
 router.put("/update/:id",effortRecordControllers.updateEffort);
-router.delete("/delete/:id", effortRecordControllers.deleteEffort);
+router.delete("/delete/", effortRecordControllers.deleteEffort);
 router.get("/getByUser", effortRecordControllers.getEffortsByUser);
 
 

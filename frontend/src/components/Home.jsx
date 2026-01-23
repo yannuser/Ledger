@@ -29,8 +29,8 @@ export default function Home() {
   const [effortForm, setEffortForm] = useState({
     title: "",
     description: "",
-    author: auth?.user?.UserInfo?.id,
     goal: "",
+    author: auth?.user?.UserInfo?.id,
   });
   const config = {
     headers: {
@@ -145,13 +145,14 @@ export default function Home() {
       )
       .then((res) => {
         console.log(res);
-        const newEffortFromDB = res.data.learningGoal;
+        // const newEffortFromDB = res.data.learningGoal;
 
         // Add new goals to my existing list immediately
-        setEffortData((prevEfforts) => [...prevEfforts, newEffortFromDB]);
-      }).catch(err => console.log(err))
+        // setEffortData((prevEfforts) => [...prevEfforts, newEffortFromDB]);
+      })
+      .catch((err) => console.log(err));
 
-      setView("list");
+    setView("list");
   };
 
   if (view === "add-goal") {
@@ -380,7 +381,7 @@ export default function Home() {
     );
   }
 
-  const handleDelete = (id) => {
+  const handleGoalDelete = (id) => {
     axios
       .delete("http://localhost:5000/learningGoal/delete", {
         ...config,
@@ -390,6 +391,23 @@ export default function Home() {
         console.log(res);
         const updated = learningData.filter((item) => item._id != id);
         setLearningData(updated);
+      })
+      .catch((err) => {
+        // alert("An error occurred")
+        console.log(err);
+      });
+  };
+
+  const handleEffortDelete = (id) => {
+    axios
+      .delete("http://localhost:5000/effortRecord/delete", {
+        ...config,
+        data: { id },
+      })
+      .then((res) => {
+        console.log(res);
+        const updated = effortData.filter((item) => item._id != id);
+        setEffortData(updated);
       })
       .catch((err) => {
         // alert("An error occurred")
@@ -456,7 +474,7 @@ export default function Home() {
                           </Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item
-                            onClick={() => handleDelete(item._id)}
+                            onClick={() => handleGoalDelete(item._id)}
                             className="text-danger rounded-2 py-2 fw-semibold"
                           >
                             Delete
@@ -493,6 +511,28 @@ export default function Home() {
                       <p className="text-muted small mb-0 line-clamp-2">
                         {item.description || "No description provided."}
                       </p>
+                      <Dropdown align="end">
+                        <Dropdown.Toggle
+                          variant="light"
+                          className="btn-icon rounded-circle p-2 border-0 bg-transparent text-secondary"
+                          id={`dropdown-${item._id}`}
+                        >
+                          <ThreeDotsVertical size={20} />
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu className="border-0 shadow rounded-3 p-2">
+                          <Dropdown.Item className="rounded-2 py-2 mb-1">
+                            Modify
+                          </Dropdown.Item>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            onClick={() => handleEffortDelete(item._id)}
+                            className="text-danger rounded-2 py-2 fw-semibold"
+                          >
+                            Delete
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
                   </div>
                 </div>
