@@ -61,9 +61,9 @@ const updateLearningGoal = async (req, res) => {
 };
 
 const deleteLearningGoal = async (req, res) => {
-    try {
-        
-        const learningGoal = await LearningGoal.findByIdAndDelete(req.params.id);
+    try {      
+        const {id} = req.body
+        const learningGoal = await LearningGoal.findByIdAndDelete(id);
 
         if (!learningGoal) {
             return res.status(404).json({ message: "Learning goal not found!" });

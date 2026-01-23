@@ -7,7 +7,7 @@ router.use(verifyJWT)
 
 router.route("/").post(learningGoalControllers.createLearningGoal);
 router.route("/update/:id").put(learningGoalControllers.updateLearningGoal);
-router.route("/delete/:id").delete(learningGoalControllers.deleteLearningGoal);
+router.route("/delete").delete(learningGoalControllers.deleteLearningGoal);
 router.route("/getByUser").get(learningGoalControllers.getLearningGoalsByUser);
 router.route("/getGoal").get(learningGoalControllers.getLearningGoal);
 
