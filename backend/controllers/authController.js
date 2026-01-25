@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 
+const saltRounds = 10;
+
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     console.log(email, password);
@@ -95,19 +97,22 @@ const logout = (req, res) => {
 }
 
 const register = asyncHandler(async (req, res) => {
+    console.log("Here's the thing", req.body);
+    
     try {
-        const { firstname, lastname, dateOfBirth, email, password } = req.body; console.log(req.body);
-        // Check if the user exists
+        const { firstname, lastname, dateOfBirth, email, password } = req.body; 
+        console.log(firstname, lastname, dateOfBirth, email, password );
+
         const existingUser = await User.findOne({ email: email });
-        console.log(existingUser);
+        console.log("Existing user associated to the email:",existingUser);
 
         if (existingUser) {
             return res.status(400).json({ message: 'Email already registered.' });
         }
-        // encrypt password
+
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        console.log(hashedPassword);
-        // create new user in the database
+        console.log("hashed password:",hashedPassword);
+
         const user = await User.create({
             firstname,
             lastname,

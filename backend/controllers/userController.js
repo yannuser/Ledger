@@ -3,38 +3,6 @@ import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
-const registerUser = async (req, res) => {
-  try {
-    const { firstname, lastname, dateOfBirth, email, password } = req.body;    
-    console.log(req.body);
-    const existingUser = await  User.findOne({email : email});
-    console.log(existingUser);
-
-    if (existingUser) {
-        return res.status(400).json({ message: 'Email already registered.' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log(hashedPassword);
-
-    const user = await User.create({
-      firstname, 
-      lastname, 
-      dateOfBirth : dateOfBirth || null,
-      email,
-      password: hashedPassword,
-    });
-
-    res.status(201).json({
-      message: "User registered successfully",
-      user
-    });
-
-  } catch (err) {
-    return res.status(400).json({ error: err.message });
-  }
-};
-
 const getLoggedInUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -109,5 +77,5 @@ const getUsers = async (req, res) => {
   }
 };
 
-const userControllers = {registerUser, getLoggedInUser, getUserById, updateUser,deleteUser, getUsers}; //which is fetched by routes as we imported there
+const userControllers = { getLoggedInUser, getUserById, updateUser,deleteUser, getUsers}; //which is fetched by routes as we imported there
 export default userControllers;

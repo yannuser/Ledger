@@ -300,7 +300,6 @@ export default function Home() {
             <Form onSubmit={handleEffortSubmit}>
               <div className="row">
                 <div className="col-md-8">
-                  {/* Title Field */}
                   <Form.Group className="mb-4" controlId="formEffortTitle">
                     <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
                       Title
@@ -317,7 +316,6 @@ export default function Home() {
                     />
                   </Form.Group>
 
-                  {/* Description Field */}
                   <Form.Group className="mb-4" controlId="formEffortDesc">
                     <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
                       Description
@@ -336,7 +334,6 @@ export default function Home() {
                 </div>
 
                 <div className="col-md-4">
-                  {/* Goal Selection Field */}
                   <Form.Group className="mb-4" controlId="formEffortGoal">
                     <Form.Label className="fw-semibold text-secondary small text-uppercase ls-1">
                       Linked Goal
