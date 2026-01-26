@@ -7,17 +7,14 @@ const saltRounds = 10;
 
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
-    console.log(email, password);
-
 
     if (!email || !password) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
-    const foundUser = await User.findOne({ email })
-    console.log(foundUser);
+    const foundUser = await User.findOne({ email }).exec();
 
-    if (!foundUser) {
+    if (!foundUser || foundUser.active === false) {
         return res.status(401).json({ message: 'Unauthorized' })
     }
 
@@ -30,7 +27,7 @@ const login = asyncHandler(async (req, res) => {
             "UserInfo": {
                 "id": foundUser._id,
                 "email": foundUser.email,
-                // "roles": foundUser.roles
+                // "roles": foundUser.roles 
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -38,97 +35,109 @@ const login = asyncHandler(async (req, res) => {
     )
 
     const refreshToken = jwt.sign(
-        { "id": foundUser._id, "email": foundUser.email },
+        { "id": foundUser._id }, // Storing just ID is safer/smaller
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: '7d' }
     )
 
-    // Create secure cookie with refresh token 
+    // Note: 'secure: true' REQUIRED for 'SameSite: None'
     res.cookie('jwt', refreshToken, {
-        httpOnly: true, //accessible only by web server 
-        secure: true, //https
-        sameSite: 'None', //cross-site cookie 
-        maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
+        httpOnly: true,
+        secure: true,  // Works on localhost in Chrome, required for Cross-Site
+        sameSite: 'None',
+        maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
-    // Send accessToken containing email and roles 
     res.json({ accessToken })
 })
 
-const refresh = async (req, res) => {
+const refresh = (req, res) => {
     const cookies = req.cookies
 
+    // Check if cookie exists
     if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' })
 
     const refreshToken = cookies.jwt
 
+    // Verify the token
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
-        asyncHandler(async (err, decoded) => {
-            if (err) return res.status(403).json({ message: 'Forbidden' })
+        async (err, decoded) => {
+            if (err) return res.status(403).json({ message: 'Forbidden' }) // Token expired or invalid
 
-            const foundUser = await User.findOne({ email: decoded.email }).exec()
+            try {
+                const foundUser = await User.findById(decoded.id).exec();
 
-            if (!foundUser) return res.status(401).json({ message: 'Unauthorized' })
+                if (!foundUser) return res.status(401).json({ message: 'Unauthorized' });
 
-            const accessToken = jwt.sign(
-                {
-                    "UserInfo": {
-                        "id": foundUser._id,
-                        "email": foundUser.email,
-                        // "roles": foundUser.roles
-                    }
-                },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15m' }
-            )
+                // Generate NEW Access Token
+                const accessToken = jwt.sign(
+                    {
+                        "UserInfo": {
+                            "id": foundUser._id,
+                            "email": foundUser.email,
+                        }
+                    },
+                    process.env.ACCESS_TOKEN_SECRET,
+                    { expiresIn: '15m' }
+                )
 
-            res.json({ accessToken })
-        })
+                res.json({ accessToken })
+
+            } catch (error) {
+                res.status(500).json({ message: 'Server Error during refresh' });
+            }
+        }
     )
 }
 
 const logout = (req, res) => {
     const cookies = req.cookies
-    if (!cookies?.jwt) return res.sendStatus(204) //No content
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
+    if (!cookies?.jwt) return res.sendStatus(204) // No content
+
+    // pass SAME options as res.cookie to clearCookie 
+    res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true
+    })
+
     res.json({ message: 'Cookie cleared' })
 }
 
 const register = asyncHandler(async (req, res) => {
-    console.log("Here's the thing", req.body);
-    
-    try {
-        const { firstname, lastname, dateOfBirth, email, password } = req.body; 
-        console.log(firstname, lastname, dateOfBirth, email, password );
+    const { firstname, lastname, dateOfBirth, email, password } = req.body;
 
-        const existingUser = await User.findOne({ email: email });
-        console.log("Existing user associated to the email:",existingUser);
+    if (!email || !password || !firstname || !lastname) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
 
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already registered.' });
-        }
+    const existingUser = await User.findOne({ email }).exec();
+    if (existingUser) {
+        return res.status(409).json({ message: 'Email already registered.' }); // 409 = Conflict
+    }
 
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        console.log("hashed password:",hashedPassword);
+    // Hash & Create
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const user = await User.create({
-            firstname,
-            lastname,
-            dateOfBirth: dateOfBirth || null,
-            email,
-            password: hashedPassword,
-        });
+    const user = await User.create({
+        firstname,
+        lastname,
+        dateOfBirth: dateOfBirth || null,
+        email,
+        password: hashedPassword,
+    });
 
+    if (user) {
         res.status(201).json({
             message: "User registered successfully",
-            user
+            userId: user._id
         });
-
-    } catch (err) {
-        return res.status(400).json({ error: err.message });
+    } else {
+        res.status(400).json({ message: 'Invalid user data received' });
     }
 })
+
 const authController = { login, refresh, logout, register }
 export default authController

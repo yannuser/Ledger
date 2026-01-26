@@ -1,15 +1,16 @@
-import React from "react";
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosPrivate from "../api/axios";
 import { AuthContext } from "../AuthContext";
-
 import { Form, Button, Container, Row, Card, Col } from "react-bootstrap";
 
+const LOGIN_URL = "/auth"; 
+
 export default function Login() {
+  const axios = axiosPrivate;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
@@ -17,18 +18,11 @@ export default function Login() {
 
   function validate() {
     const newErrors = {};
+    if (!email) newErrors.email = "Email address is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Invalid email.";
 
-    if (!email) {
-      newErrors.email = "Email address is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Please enter a valid email address.";
-    }
-
-    if (!password) {
-      newErrors.password = "Password is required.";
-    } else if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long.";
-    }
+    if (!password) newErrors.password = "Password is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -36,23 +30,35 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     try {
-      const result = await axios.post("http://localhost:5000/auth/", {
-        email,
-        password,
-      });
+      // 'withCredentials: true' so the browser accepts the cookie.
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ email, password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
+      );
 
-      const { accessToken } = result.data;
+      const accessToken = response.data.accessToken;
+
       login(accessToken);
       navigate("/home");
     } catch (err) {
-      console.log(err);
-      setErrors({
-        form: "Invalid email or password.",
-      });
+      console.error("Login Error:", err);
+
+      if (!err?.response) {
+        setErrors({ form: "No Server Response" });
+      } else if (err.response?.status === 400) {
+        setErrors({ form: "Missing Username or Password" });
+      } else if (err.response?.status === 401) {
+        setErrors({ form: "Unauthorized: Invalid email or password" });
+      } else {
+        setErrors({ form: "Login failed" });
+      }
     }
   };
 
@@ -78,7 +84,6 @@ export default function Login() {
                     <Form.Control
                       size="lg"
                       type="email"
-                      placeholder="name@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       isInvalid={!!errors.email}
@@ -90,22 +95,12 @@ export default function Login() {
                   </Form.Group>
 
                   <Form.Group className="mb-4" controlId="formBasicPassword">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <Form.Label className="fw-semibold small text-uppercase text-secondary ls-1">
-                        Password
-                      </Form.Label>
-                      <Button
-                        variant="link"
-                        className="text-muted text-decoration-none p-0 small"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        Forgot password?
-                      </Button>
-                    </div>
+                    <Form.Label className="fw-semibold small text-uppercase text-secondary ls-1">
+                      Password
+                    </Form.Label>
                     <Form.Control
                       size="lg"
                       type="password"
-                      placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       isInvalid={!!errors.password}
