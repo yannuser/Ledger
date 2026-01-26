@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   ThreeDotsVertical,
 } from "react-bootstrap-icons";
+import LogNavbar from "./LogNavbar";
 
 export default function Home() {
   const [learningData, setLearningData] = useState([]);
@@ -417,121 +418,129 @@ export default function Home() {
         </div>
       )}
       {!loading && (
-        <div className="container py-5">
-          <div className="mb-5">
-            <div className="d-flex align-items-center justify-content-between mb-4">
-              <h2 className="h3 fw-bold text-dark mb-0">Goals</h2>
-              <Button
-                variant="primary"
-                size="sm"
-                className="rounded-pill px-3 shadow-sm d-flex align-items-center gap-2"
-                onClick={() => setView("add-goal")}
-              >
-                <PlusCircle size={18} />
-                <span>Add Goal</span>
-              </Button>
+        <>
+          <LogNavbar />
+          <div className="container py-5">
+            <div className="mb-5">
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h2 className="h3 fw-bold text-dark mb-0">Goals</h2>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="rounded-pill px-3 shadow-sm d-flex align-items-center gap-2"
+                  onClick={() => setView("add-goal")}
+                >
+                  <PlusCircle size={18} />
+                  <span>Add Goal</span>
+                </Button>
+              </div>
+
+              <div className="row g-3">
+                {learningData.map((item) => (
+                  <div className="col-12" key={item._id}>
+                    <div className="card border-0 shadow-sm rounded-3 hover-shadow transition-all">
+                      <div className="card-body d-flex align-items-center justify-content-between p-4">
+                        <div className="d-flex flex-column">
+                          <h5 className="fw-bold text-dark mb-1">
+                            {item.title}
+                          </h5>
+                          <p className="text-muted mb-0 small">
+                            {item.description || "No description provided."}
+                          </p>
+                        </div>
+
+                        <Dropdown align="end">
+                          <Dropdown.Toggle
+                            variant="light"
+                            className="btn-icon rounded-circle p-2 border-0 bg-transparent text-secondary"
+                            id={`dropdown-${item._id}`}
+                          >
+                            <ThreeDotsVertical size={20} />
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu className="border-0 shadow rounded-3 p-2">
+                            <Dropdown.Item
+                              as={Link}
+                              to={"/home/" + item._id}
+                              className="rounded-2 py-2 mb-1"
+                            >
+                              See details
+                            </Dropdown.Item>
+                            <Dropdown.Item className="rounded-2 py-2 mb-1">
+                              Modify
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item
+                              onClick={() => handleDelete(item._id, "goal")}
+                              className="text-danger rounded-2 py-2 fw-semibold"
+                            >
+                              Delete
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="row g-3">
-              {learningData.map((item) => (
-                <div className="col-12" key={item._id}>
-                  <div className="card border-0 shadow-sm rounded-3 hover-shadow transition-all">
-                    <div className="card-body d-flex align-items-center justify-content-between p-4">
-                      <div className="d-flex flex-column">
-                        <h5 className="fw-bold text-dark mb-1">{item.title}</h5>
-                        <p className="text-muted mb-0 small">
+            <div className="mt-5">
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h2 className="h3 fw-bold text-dark mb-0">Efforts</h2>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  className="rounded-pill px-3 d-flex align-items-center gap-2"
+                  onClick={() => setView("add-effort")}
+                >
+                  <PlusCircle size={18} />
+                  <span>Add Effort</span>
+                </Button>
+              </div>
+
+              <div className="row g-3">
+                {effortData.map((item) => (
+                  <div
+                    className="col-md-6 col-lg-4"
+                    key={item._id || item.title}
+                  >
+                    <div className="card h-100 border-0 shadow-sm rounded-3">
+                      <div className="card-body p-4">
+                        <h6 className="fw-bold mb-2">{item.title}</h6>
+                        <p className="text-muted small mb-0 line-clamp-2">
                           {item.description || "No description provided."}
                         </p>
+                        <Dropdown align="end">
+                          <Dropdown.Toggle
+                            variant="light"
+                            className="btn-icon rounded-circle p-2 border-0 bg-transparent text-secondary"
+                            id={`dropdown-${item._id}`}
+                          >
+                            <ThreeDotsVertical size={20} />
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu className="border-0 shadow rounded-3 p-2">
+                            <Dropdown.Item className="rounded-2 py-2 mb-1">
+                              Modify
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item
+                              onClick={() => handleDelete(item._id, "effort")}
+                              className="text-danger rounded-2 py-2 fw-semibold"
+                            >
+                              Delete
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       </div>
-
-                      <Dropdown align="end">
-                        <Dropdown.Toggle
-                          variant="light"
-                          className="btn-icon rounded-circle p-2 border-0 bg-transparent text-secondary"
-                          id={`dropdown-${item._id}`}
-                        >
-                          <ThreeDotsVertical size={20} />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu className="border-0 shadow rounded-3 p-2">
-                          <Dropdown.Item
-                            as={Link}
-                            to={"/home/" + item._id}
-                            className="rounded-2 py-2 mb-1"
-                          >
-                            See details
-                          </Dropdown.Item>
-                          <Dropdown.Item className="rounded-2 py-2 mb-1">
-                            Modify
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item
-                            onClick={() => handleDelete(item._id, "goal")}
-                            className="text-danger rounded-2 py-2 fw-semibold"
-                          >
-                            Delete
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-
-          <div className="mt-5">
-            <div className="d-flex align-items-center justify-content-between mb-4">
-              <h2 className="h3 fw-bold text-dark mb-0">Efforts</h2>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                className="rounded-pill px-3 d-flex align-items-center gap-2"
-                onClick={() => setView("add-effort")}
-              >
-                <PlusCircle size={18} />
-                <span>Add Effort</span>
-              </Button>
-            </div>
-
-            <div className="row g-3">
-              {effortData.map((item) => (
-                <div className="col-md-6 col-lg-4" key={item._id || item.title}>
-                  <div className="card h-100 border-0 shadow-sm rounded-3">
-                    <div className="card-body p-4">
-                      <h6 className="fw-bold mb-2">{item.title}</h6>
-                      <p className="text-muted small mb-0 line-clamp-2">
-                        {item.description || "No description provided."}
-                      </p>
-                      <Dropdown align="end">
-                        <Dropdown.Toggle
-                          variant="light"
-                          className="btn-icon rounded-circle p-2 border-0 bg-transparent text-secondary"
-                          id={`dropdown-${item._id}`}
-                        >
-                          <ThreeDotsVertical size={20} />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu className="border-0 shadow rounded-3 p-2">
-                          <Dropdown.Item className="rounded-2 py-2 mb-1">
-                            Modify
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item
-                            onClick={() => handleDelete(item._id, "effort")}
-                            className="text-danger rounded-2 py-2 fw-semibold"
-                          >
-                            Delete
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </>
   );
